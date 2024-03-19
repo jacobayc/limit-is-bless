@@ -1,0 +1,13 @@
+{
+	"name": "NIKE",
+	"short_name": "NIKE",
+	"description": "NIKE",
+	"start_url": "/",
+	"scope": "/",
+	"background_color": "#f5f3ff",
+	"theme_color": "#7c61ff",
+	"dir": "ltr",
+	"display": "standalone",
+	"orientation": "any",
+	"categories": ["lifestyle", "productivity", "social"] 
+}
