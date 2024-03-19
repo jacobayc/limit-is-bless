@@ -1,8 +1,8 @@
 // router/index.ts
 import { createWebHistory, createRouter, RouteRecordRaw } from "vue-router";
 
-import Home from '@/views/home.vue';
-import List from '@/views/list.vue';
+import Home from '@/views/Home.vue';
+import List from '@/views/List.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
