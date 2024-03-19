@@ -3,7 +3,7 @@
   <div class="daily">
     <!-- <h1>{{ msg }}</h1> -->
     <input type="text" v-model="title" placeholder="Title" />
-    <textarea v-model="text" @input="onTextAreaInput" name="" id="" cols="20" rows="15"></textarea>
+    <textarea v-model="text" @input="onTextAreaInput()" name="" id="" cols="20" rows="15"></textarea>
     <div class="buttonArea">
      <button style="margin-right:5px;" @click="isShow = !isShow">edit</button> 
      <button @click="saveText">save</button> 
@@ -44,7 +44,7 @@ const onTextAreaInput = (event : KeyboardEvent) => {
     text.value = newText;
 }
 
-const handleItemClick = (v) => {
+const handleItemClick = (v:any) => {
   const uniqId = v.id
   router.push(`/list?id=${uniqId}`);
 };
@@ -74,13 +74,13 @@ const saveText = () => {
   text.value = ""
 }
 
-const deleteItem = (id) => {
+const deleteItem = (id:any) => {
   // 로컬 스토리지에서 저장된 데이터 가져오기
   const savedTextsStr = localStorage.getItem('savedTexts');
   let savedTexts = savedTextsStr ? JSON.parse(savedTextsStr) : [];
 
   // 해당 아이템의 인덱스 찾기
-  const index = savedTexts.findIndex(item => item.id === id);
+  const index = savedTexts.findIndex((item:any) => item.id === id);
 
   if (index !== -1) {
     // 아이템 삭제

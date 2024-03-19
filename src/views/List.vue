@@ -21,7 +21,7 @@ const dailys = ref<any[]>([])
 const getList = () => {
   const query = router.currentRoute.value.query;
   const savedTexts = JSON.parse(localStorage.getItem('savedTexts') || '[]');
-  const filteredText = savedTexts.filter(v => v.id == query.id)
+  const filteredText = savedTexts.filter((v: any) => v.id == query.id)
   
   // 가져온 텍스트 배열을 dailys 배열에 할당
   dailys.value = filteredText;

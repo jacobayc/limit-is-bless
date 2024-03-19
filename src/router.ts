@@ -1,10 +1,10 @@
 // router/index.ts
-import { createWebHistory, createRouter } from "vue-router";
+import { createWebHistory, createRouter, RouteRecordRaw } from "vue-router";
 
-import Home from '@/views/Home.vue';
-import List from '@/views/List.vue';
+import Home from '@/views/home.vue';
+import List from '@/views/list.vue';
 
-const routes = [
+const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Home',
