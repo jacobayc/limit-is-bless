@@ -3,7 +3,7 @@
   <div class="daily">
     <!-- <h1>{{ msg }}</h1> -->
     <input type="text" v-model="title" placeholder="Title" />
-    <textarea v-model="text" @input="onTextAreaInput()" name="" id="" cols="20" rows="15"></textarea>
+    <textarea v-model="text" @input="onTextAreaInput" name="" id="" cols="20" rows="15"></textarea>
     <div class="buttonArea">
      <button style="margin-right:5px;" @click="isShow = !isShow">edit</button> 
      <button @click="saveText">save</button> 
@@ -35,13 +35,13 @@ onMounted(() => {
 })
 
 
-const onTextAreaInput = (event : KeyboardEvent) => {
+const onTextAreaInput = (event:any) => {
   let newText = (event.target as HTMLTextAreaElement).value;
       // 엔터 키를 눌렀을 때 '\n' 처리
       if (event.key  === 'Enter') {
         newText += '\n';
       }
-    text.value = newText;
+      text.value = newText;
 }
 
 const handleItemClick = (v:any) => {
@@ -61,7 +61,7 @@ const saveText = () => {
 
   isShow.value = false
   let savedTexts = JSON.parse(localStorage.getItem('savedTexts') || '[]'); // 저장된 텍스트 배열 가져오기
-  if(text.value.length < 2 || title.value.length < 2) {
+  if(text.value.length < 2 || title.value.length < 1) {
     alert("내용을 입력해주세요")
     dailys.value = savedTexts;
     return
