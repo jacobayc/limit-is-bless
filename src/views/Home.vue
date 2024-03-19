@@ -105,7 +105,8 @@ const generateId = () => {
 
 <style lang="less" scoped>
 .daily {
-  margin:0 auto;
+
+  margin:20vh auto 0;
   max-width: 1903px;
   width: 90%;
   input[type="text"] {
