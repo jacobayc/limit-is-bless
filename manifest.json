@@ -1,7 +1,7 @@
 {
-	"name": "NIKE",
-	"short_name": "NIKE",
-	"description": "NIKE",
+	"name": "끄적임",
+	"short_name": "끄적임",
+	"description": "한계를 끄적이다",
 	"start_url": "/",
 	"scope": "/",
 	"background_color": "#f5f3ff",
