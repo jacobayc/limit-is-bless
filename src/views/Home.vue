@@ -12,7 +12,10 @@
       <ul>
         <li v-for="(daily, idx) in dailys" :key="idx">
           <div @click="handleItemClick(daily)"> {{ daily.title }}</div>
+          <div class="userBtn">
+            <button v-show="isShow" @click="editItem(daily)">rewrite</button>
             <button v-show="isShow" @click="deleteItem(daily.id)">delete</button>
+          </div>
         </li>
       </ul>
     </div>
@@ -28,11 +31,21 @@ const title = ref<string>('')
 const text = ref<string>('')
 const isShow = ref<boolean>(false);
 const router = useRouter();
+const editingItemId = ref<string>('')
+
 
 onMounted(() => {
   // 로컬 스토리지에서 저장된 텍스트 배열을 가져옴
   getList()
 })
+
+const editItem = (daily:any) => {
+  // 해당 항목의 내용을 수정할 수 있도록 title과 text에 저장
+  title.value = daily.title;
+  text.value = daily.text;
+
+  editingItemId.value = daily.id;
+}
 
 
 const onTextAreaInput = (event:any) => {
@@ -66,12 +79,41 @@ const saveText = () => {
     dailys.value = savedTexts;
     return
   }
-  const id = generateId(); // 고유한 id 생성
-  savedTexts.push({ id: id, title: title.value, text: text.value }); // 새로운 텍스트 추가
-  localStorage.setItem('savedTexts', JSON.stringify(savedTexts)); // 배열을 다시 local storage에 저장
-  dailys.value = savedTexts;
-  title.value = "";
-  text.value = ""
+
+  if (editingItemId.value) {
+    // 수정 중인 아이템의 인덱스 찾기
+    const index = savedTexts.findIndex((item:any) => item.id === editingItemId.value);
+    if (index !== -1) {
+      // 해당 아이템의 내용을 수정
+      savedTexts[index].title = title.value;
+      savedTexts[index].text = text.value;
+      localStorage.setItem('savedTexts', JSON.stringify(savedTexts));
+      // 수정 후에는 editingItemId 초기화
+      editingItemId.value = null;
+      console.log(`Item with ID ${editingItemId.value} updated`);
+      dailys.value = savedTexts;
+      title.value = "";
+      text.value = ""
+    } else {
+      console.log(`Item with ID ${editingItemId.value} not found`);
+    }
+  } else {
+    const id = generateId(); // 고유한 id 생성
+    savedTexts.push({ id: id, title: title.value, text: text.value }); // 새로운 텍스트 추가
+    localStorage.setItem('savedTexts', JSON.stringify(savedTexts)); // 배열을 다시 local storage에 저장
+    console.log(`New item added with ID ${id}`);
+    dailys.value = savedTexts;
+    title.value = "";
+    text.value = ""
+  }
+
+
+  // const id = generateId(); // 고유한 id 생성
+  // savedTexts.push({ id: id, title: title.value, text: text.value }); // 새로운 텍스트 추가
+  // localStorage.setItem('savedTexts', JSON.stringify(savedTexts)); // 배열을 다시 local storage에 저장
+  // dailys.value = savedTexts;
+  // title.value = "";
+  // text.value = ""
 }
 
 const deleteItem = (id:any) => {
@@ -159,13 +201,12 @@ const generateId = () => {
         position: relative;
         list-style-type: none;
         margin-bottom: 20px;
-      &>div {
-        
-      }
-      &>button {
+      &> .userBtn {
         position: absolute;
         right: 0;
         top: 0;
+        &>button {
+        }
       }
     }
    }
