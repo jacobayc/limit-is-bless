@@ -88,12 +88,7 @@ const saveText = () => {
       savedTexts[index].title = title.value;
       savedTexts[index].text = text.value;
       localStorage.setItem('savedTexts', JSON.stringify(savedTexts));
-      // 수정 후에는 editingItemId 초기화
-      editingItemId.value = null;
       console.log(`Item with ID ${editingItemId.value} updated`);
-      dailys.value = savedTexts;
-      title.value = "";
-      text.value = ""
     } else {
       console.log(`Item with ID ${editingItemId.value} not found`);
     }
@@ -102,11 +97,15 @@ const saveText = () => {
     savedTexts.push({ id: id, title: title.value, text: text.value }); // 새로운 텍스트 추가
     localStorage.setItem('savedTexts', JSON.stringify(savedTexts)); // 배열을 다시 local storage에 저장
     console.log(`New item added with ID ${id}`);
+  }
+    
+    // 로컬스토리지 내용 갱신
+    localStorage.setItem('savedTexts', JSON.stringify(savedTexts));
+    
+    // 화면갱신
     dailys.value = savedTexts;
     title.value = "";
     text.value = ""
-  }
-
 
   // const id = generateId(); // 고유한 id 생성
   // savedTexts.push({ id: id, title: title.value, text: text.value }); // 새로운 텍스트 추가
