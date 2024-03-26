@@ -31,6 +31,16 @@ const getList = () => {
 </script>
 
 <style lang="less" scoped>
+.dailyList {
+  &>h3 {
+    padding-top:40px;
+  }
+  &>div {
+    height: 100vh;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+  }
+}
 
 @media screen and (min-width : 300px) and (max-width : 760px) {
   .dailyList {
@@ -52,7 +62,6 @@ const getList = () => {
       height: 100vh;
       word-wrap: break-word;
       white-space: pre-wrap;
-      
     }
   }
 }
