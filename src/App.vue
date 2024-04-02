@@ -8,6 +8,7 @@
 
 <style>
   #app {
+    background-color:#242424;
     margin: 0;
     padding: 0;
     max-width: 1903px;

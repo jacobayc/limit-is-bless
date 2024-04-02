@@ -5,16 +5,16 @@
     <input type="text" v-model="title" placeholder="Title" />
     <textarea v-model="text" @input="onTextAreaInput" name="" id="" cols="20" rows="15"></textarea>
     <div class="buttonArea">
-     <button style="margin-right:5px;" @click="isShow = !isShow">edit</button> 
-     <button @click="saveText">save</button> 
+     <p style="margin-right:5px;" @click="isShow = !isShow"><img src="@/assets/setting.png" alt=""></p> 
+     <p @click="saveText"><img src="@/assets/save.png" alt=""></p> 
     </div>
     <div class="list">
       <ul>
         <li v-for="(daily, idx) in dailys" :key="idx">
           <div @click="handleItemClick(daily)"> {{ daily.title }}</div>
           <div class="userBtn">
-            <button v-show="isShow" @click="editItem(daily)">rewrite</button>
-            <button v-show="isShow" @click="deleteItem(daily.id)">delete</button>
+            <p v-show="isShow" @click="editItem(daily)"><img src="@/assets/edit.png" alt=""></p>
+            <p v-show="isShow" @click="deleteItem(daily.id)"><img src="@/assets/delete.png" alt=""></p>
           </div>
         </li>
       </ul>
@@ -174,6 +174,15 @@ const generateId = () => {
     scrollbar-width: thin; /* Firefox */
   }
   .buttonArea {
+    >p{
+      overflow: hidden;
+      width: 30px;
+      padding: 0 5px;
+      >img {
+        width: 100%;
+        border-radius: 5px;
+      }
+    }
     max-width: 600px; 
     margin: 10px auto; 
     display: flex; 
@@ -187,7 +196,8 @@ const generateId = () => {
     margin: 0 auto;
     scrollbar-width: thin; /* Firefox */
     &::-webkit-scrollbar {
-      display: none; /* Chrome, Safari, Opera*/
+      display: none; 
+      /* Chrome, Safari, Opera*/
     }
     &>ul {
       padding-left: 0;
@@ -201,10 +211,18 @@ const generateId = () => {
         list-style-type: none;
         margin-bottom: 20px;
       &> .userBtn {
+        display: flex;
         position: absolute;
         right: 0;
-        top: 0;
-        &>button {
+        top: -10px;
+        &>p {
+          padding: 0 7px;
+          overflow:hidden;
+          width: 30px;
+          >img {
+            width: 100%;
+            border-radius: 5px;
+          }
         }
       }
     }
@@ -247,6 +265,14 @@ const generateId = () => {
     scrollbar-width: thin; /* Firefox */
   }
   .buttonArea {
+    >p {
+      overflow: hidden;
+      background-color:#242424;
+      >img {
+        width: 100%;
+        border-radius: 5px;
+      }
+    }
     max-width: 85%; 
     margin: 10px auto; 
     display: flex; 
