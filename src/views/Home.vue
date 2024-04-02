@@ -160,7 +160,7 @@ const exportToExcel = () => {
   csvContent += "Title,Text\n";
 
   // 데이터 배열을 순회하며 각 요소를 CSV 형식으로 변환
-  savedTexts.forEach(item => {
+  savedTexts.forEach((item:any) => {
     const row = `${item.title},${item.text.replace(/(?:\r\n|\r|\n)/g, ' ')}\n`;
     csvContent += row;
   });
