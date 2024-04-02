@@ -180,6 +180,7 @@ const exportToExcel = () => {
 
 <style lang="less" scoped>
 .daily {
+  color: #efefef;
   margin:20vh auto 0;
   max-width: 1903px;
   width: 90%;
@@ -191,6 +192,7 @@ const exportToExcel = () => {
   }
   input[type="text"] {
     background-color:#2f2f2f;
+    color: #efefef;
     max-width: 583px;
     width: 100%;
     padding:15px;
@@ -200,6 +202,7 @@ const exportToExcel = () => {
     border-radius: 5px;
   }
   textarea {
+    color: #efefef;
     background-color:#2f2f2f;
     max-width: 583px;
     width: 100%;
