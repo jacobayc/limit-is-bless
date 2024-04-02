@@ -2,6 +2,7 @@
 <template>
   <div class="daily">
     <!-- <h1>{{ msg }}</h1> -->
+    <div class="title"> Élan vital </div>
     <input type="text" v-model="title" placeholder="Title" />
     <textarea v-model="text" @input="onTextAreaInput" name="" id="" cols="20" rows="15"></textarea>
     <div class="buttonArea">
@@ -146,11 +147,17 @@ const generateId = () => {
 
 <style lang="less" scoped>
 .daily {
-
   margin:20vh auto 0;
   max-width: 1903px;
   width: 90%;
+  .title {
+    height: 100px;
+    line-height: 100px;
+    text-align: center;
+    padding-top: 50px;
+  }
   input[type="text"] {
+    background-color:#2f2f2f;
     max-width: 583px;
     width: 100%;
     padding:15px;
@@ -160,6 +167,7 @@ const generateId = () => {
     border-radius: 5px;
   }
   textarea {
+    background-color:#2f2f2f;
     max-width: 583px;
     width: 100%;
     padding:15px;
