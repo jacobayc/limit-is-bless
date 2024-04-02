@@ -12,7 +12,7 @@
     </div>
     <div class="list">
       <ul>
-        <li v-for="(daily, idx) in dailys" :key="idx">
+        <li v-for="(daily, idx) in dailys.reverse()" :key="idx">
           <div @click="handleItemClick(daily)"> {{ daily.title }}</div>
           <div class="userBtn">
             <p v-show="isShow" @click="editItem(daily)"><img src="@/assets/edit.png" alt=""></p>
