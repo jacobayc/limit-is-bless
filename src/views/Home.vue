@@ -8,6 +8,7 @@
     <div class="buttonArea">
      <p style="margin-right:5px;" @click="isShow = !isShow"><img src="@/assets/setting.png" alt=""></p> 
      <p @click="saveText"><img src="@/assets/save.png" alt=""></p> 
+     <p v-show="isShow" style ="position: absolute; left:0; top: 0;" @click="exportToExcel"><img src="@/assets/export.png" alt=""></p> 
     </div>
     <div class="list">
       <ul>
@@ -143,6 +144,38 @@ const generateId = () => {
   return new Date().getTime().toString(36);
 }
 
+const exportToExcel = () => {
+  // 저장된 데이터 가져오기
+  const savedTexts = JSON.parse(localStorage.getItem('savedTexts') || '[]');
+
+  // 데이터가 존재하는지 확인
+  if (savedTexts.length === 0) {
+    alert('내보낼 데이터가 없습니다.');
+    return;
+  }
+
+  // Excel 파일로 변환할 데이터
+  let csvContent = "data:text/csv;charset=utf-8,";
+  // 헤더 추가 (제목과 내용)
+  csvContent += "Title,Text\n";
+
+  // 데이터 배열을 순회하며 각 요소를 CSV 형식으로 변환
+  savedTexts.forEach(item => {
+    const row = `${item.title},${item.text.replace(/(?:\r\n|\r|\n)/g, ' ')}\n`;
+    csvContent += row;
+  });
+
+  // CSV 형식의 데이터를 Blob 객체로 생성
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "exported_data.csv");
+  document.body.appendChild(link);
+
+  // 다운로드 링크 클릭
+  link.click();
+}
+
 </script>
 
 <style lang="less" scoped>
@@ -182,6 +215,7 @@ const generateId = () => {
     scrollbar-width: thin; /* Firefox */
   }
   .buttonArea {
+    position: relative;
     >p{
       overflow: hidden;
       width: 30px;
