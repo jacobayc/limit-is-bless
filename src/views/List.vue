@@ -33,11 +33,14 @@ const getList = () => {
 <style lang="less" scoped>
 .dailyList {
   color: #efefef;
+  height: 100vh;
   &>h3 {
     padding-top:40px;
   }
   &>div {
-    height: 100vh;
+    height: 90vh;
+    padding: 40px 60px;
+    text-align: left;
     word-wrap: break-word;
     white-space: pre-wrap;
   }
@@ -59,11 +62,11 @@ const getList = () => {
     &>div {
       position: fixed; top:60px; left:20px;
       width: 92%;
-      padding-top:20px;
+      padding: 20px 0px 20px 0px;
       text-align: left;
       margin:0 auto;
       overflow:auto;
-      height: 100vh;
+      height: 90vh;
       word-wrap: break-word;
       white-space: pre-wrap;
     }
