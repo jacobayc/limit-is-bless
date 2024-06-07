@@ -39,6 +39,64 @@ const router = useRouter();
 const editingItemId = ref<string>('')
 const isEditMode = ref<boolean>(false)
 
+//자동 저장 함수
+const startAutoSave = () => {
+  // isEditMode가 true이고 1분마다 saveText 함수를 호출하여 자동 저장
+  if (isEditMode.value) {
+    autoSaveInterval = setInterval(saveTextAutomatically, 60000); // 1분마다 호출 (60 * 1000 milliseconds)
+  }
+}
+
+const saveTextAutomatically = () => {
+  // title과 text의 값이 존재하는지 확인
+  if (title.value && text.value) {
+
+  isShow.value = false
+  let savedTexts = JSON.parse(localStorage.getItem('savedTexts') || '[]'); // 저장된 텍스트 배열 가져오기
+  if(text.value.length < 2 || title.value.length < 1) {
+    alert("내용을 입력해주세요")
+    dailys.value = savedTexts;
+    return
+  }
+
+  const index = savedTexts.findIndex((item:any) => item.id === editingItemId.value);
+  const currentDate = new Date(); // 현재 시간을 얻기 위해 Date 객체 생성
+  const year = currentDate.getFullYear(); // 연도를 가져옴
+  const month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // 월을 가져옴 (0부터 시작하므로 +1 필요, 두 자리로 만듦)
+  const day = ('0' + currentDate.getDate()).slice(-2); // 일을 가져옴 (두 자리로 만듦)
+  const hours = ('0' + currentDate.getHours()).slice(-2); // 시간을 가져옴 (두 자리로 만듦)
+
+  const currentTimeFormatted = `${year}.${month}.${day}.${hours}`; // yyyy.mm.dd.hh 형식으로 변환
+  if (editingItemId.value) {
+    // 수정 중인 아이템의 인덱스 찾기
+    if (index !== -1) {
+      // 해당 아이템의 내용을 수정
+      savedTexts[index].title = title.value;
+      savedTexts[index].text = text.value;
+      savedTexts[index].date = currentTimeFormatted
+      localStorage.setItem('savedTexts', JSON.stringify(savedTexts));
+      console.log(`Item with ID ${editingItemId.value} updated`);
+    } else {
+      console.log(`Item with ID ${editingItemId.value} not found`);
+    }
+  } else {
+    const id = generateId(); // 고유한 id 생성
+    savedTexts.push({ id: id, title: title.value, text: text.value, date: currentTimeFormatted }); // 새로운 텍스트 추가
+    localStorage.setItem('savedTexts', JSON.stringify(savedTexts)); // 배열을 다시 local storage에 저장
+    console.log(`New item added with ID ${id}`);
+  }
+    
+    // 로컬스토리지 내용 갱신
+    localStorage.setItem('savedTexts', JSON.stringify(savedTexts));
+    
+    // 화면갱신
+    // dailys.value = savedTexts;
+    // title.value = "";
+    // text.value = ""
+  alert("임시저장 완료")
+  // isEditMode.value= false
+  }
+}
 
 
 const textareaRows = computed(() => {
@@ -64,6 +122,8 @@ const editItem = (daily:any) => {
   isShow.value = false;
   isEditMode.value = true;
   alert("수정 후 저장버튼을 눌러야 작업이 완료됩니다.")
+  // 자동 저장 함수 호출
+  startAutoSave();
 }
 
 
