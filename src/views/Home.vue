@@ -3,8 +3,11 @@
   <div class="daily">
     <!-- <h1>{{ msg }}</h1> -->
     <div class="title"> Élan vital </div>
-    <input type="text" v-model="title" placeholder="Title" />
-    <textarea v-model="text" @input="onTextAreaInput" name="" id="" cols="20" rows="15"></textarea>
+    <div v-if="isEditMode" style="width: 613px; margin:0 auto 10px; text-align: left;">
+      <p style="width: 100px; text-align: center; background:purple; border-radius: 8px;">Edit mode</p>
+    </div>
+    <input :style="{ outline: isEditMode ? '1px dashed lime' : 'none' }" type="text" v-model="title" placeholder="Title" />
+    <textarea :style="{ outline: isEditMode ? '1px dashed lime' : 'none' }" v-model="text" @input="onTextAreaInput" name="" id="" cols="20" rows="15"></textarea>
     <div class="buttonArea">
      <p style="margin-right:5px;" @click="isShow = !isShow"><img src="@/assets/setting.png" alt=""></p> 
      <p @click="saveText"><img src="@/assets/save.png" alt=""></p> 
@@ -34,6 +37,7 @@ const text = ref<string>('')
 const isShow = ref<boolean>(false);
 const router = useRouter();
 const editingItemId = ref<string>('')
+const isEditMode = ref<boolean>(false)
 
 
 onMounted(() => {
@@ -47,6 +51,9 @@ const editItem = (daily:any) => {
   text.value = daily.text;
 
   editingItemId.value = daily.id;
+  isShow.value = false;
+  isEditMode.value = true;
+  alert("수정 후 저장버튼을 눌러야 작업이 완료됩니다.")
 }
 
 
@@ -115,6 +122,8 @@ const saveText = () => {
   // dailys.value = savedTexts;
   // title.value = "";
   // text.value = ""
+  alert("저장 완료")
+  isEditMode.value= false
 }
 
 const deleteItem = (id:any) => {
@@ -126,6 +135,7 @@ const deleteItem = (id:any) => {
   const index = savedTexts.findIndex((item:any) => item.id === id);
 
   if (index !== -1) {
+    alert('삭제 완료.')
     // 아이템 삭제
     savedTexts.splice(index, 1);
     // 수정된 데이터 다시 로컬 스토리지에 저장
@@ -137,6 +147,7 @@ const deleteItem = (id:any) => {
   } else {
     console.log(`Item with ID ${id} not found`);
   }
+  isShow.value = false;
 }
 
 const generateId = () => {
