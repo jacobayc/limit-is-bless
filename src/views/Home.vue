@@ -3,8 +3,8 @@
   <div class="daily">
     <!-- <h1>{{ msg }}</h1> -->
     <div class="title"> Élan vital </div>
-    <div v-if="isEditMode" style="width: 613px; margin:0 auto 10px; padding-left: 20px; text-align: left;">
-      <p style="width: 100px; text-align: center; background:purple; border-radius: 8px;">Edit mode</p>
+    <div v-if="isEditMode" style="width: 85%; font-size:12px; margin:0 auto; text-align: left;">
+      <p style="width: 75px; text-align: center; background:purple; border-radius: 8px;">Edit Mode</p>
     </div>
     <input :style="{ outline: isEditMode ? '1px dashed lime' : 'none' }" type="text" v-model="title" placeholder="Title" />
     <textarea :style="{ outline: isEditMode ? '1px dashed lime' : 'none' }" v-model="text" @input="onTextAreaInput" name="" id="" cols="20" :rows="textareaRows"></textarea>
