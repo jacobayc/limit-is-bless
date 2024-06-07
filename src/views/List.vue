@@ -1,6 +1,6 @@
 <template>
   <div class="dailyList" v-for="(list , idx) in dailys" :key ="idx">
-    <h3> {{ list.title }} </h3>
+    <h3><span> " {{ list.title }} "</span></h3>
     <div> {{ list.text }} </div>
   </div>
   <div class="back" @click="router.push('/')" style="position: fixed; top:20px; right: 30px; cursor: pointer;">BACK</div>
@@ -54,10 +54,30 @@ const getList = () => {
     width: 100%;
     &>h3{
       width: 100%;
+      min-height: 30px;
       margin:0 auto;
-      border-bottom: 1px dashed #ccc;
-      padding: 20px 0;
+      border-bottom: none;
+      padding: 10px 0;
       position: fixed; top:0; left:0;
+      &>span {
+        text-align: left;
+        color:salmon;
+        display: block;
+        width: 280px;
+        line-height:30px;
+        padding-left: 30px;
+        font-size: 18px;
+        white-space: nowrap; /* 텍스트가 넘치는 경우 줄바꿈을 방지합니다. */
+        overflow: hidden; /* 넘치는 부분을 숨깁니다. */
+        text-overflow: ellipsis; /* 넘치는 부분을 말줄임표로 처리합니다. */
+      }
+      &::after{
+        width: 100%;
+        content: "";
+        display: block;
+        transform:translateY(10px);
+        border-bottom: 1px solid #ccc;
+      }
     }
     &>div {
       position: fixed; top:60px; left:20px;
@@ -71,5 +91,10 @@ const getList = () => {
       white-space: pre-wrap;
     }
   }
+  .back {
+    font-size: 12px;
+    line-height: 12px;
+    color: #efefef;
+  } 
 }
 </style>

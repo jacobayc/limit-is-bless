@@ -3,11 +3,11 @@
   <div class="daily">
     <!-- <h1>{{ msg }}</h1> -->
     <div class="title"> Élan vital </div>
-    <div v-if="isEditMode" style="width: 613px; margin:0 auto 10px; text-align: left;">
+    <div v-if="isEditMode" style="width: 613px; margin:0 auto 10px; padding-left: 20px; text-align: left;">
       <p style="width: 100px; text-align: center; background:purple; border-radius: 8px;">Edit mode</p>
     </div>
     <input :style="{ outline: isEditMode ? '1px dashed lime' : 'none' }" type="text" v-model="title" placeholder="Title" />
-    <textarea :style="{ outline: isEditMode ? '1px dashed lime' : 'none' }" v-model="text" @input="onTextAreaInput" name="" id="" cols="20" rows="15"></textarea>
+    <textarea :style="{ outline: isEditMode ? '1px dashed lime' : 'none' }" v-model="text" @input="onTextAreaInput" name="" id="" cols="20" :rows="textareaRows"></textarea>
     <div class="buttonArea">
      <p style="margin-right:5px;" @click="isShow = !isShow"><img src="@/assets/setting.png" alt=""></p> 
      <p @click="saveText"><img src="@/assets/save.png" alt=""></p> 
@@ -15,8 +15,8 @@
     </div>
     <div class="list">
       <ul>
-        <li v-for="(daily, idx) in dailys" :key="idx">
-          <div @click="handleItemClick(daily)"> {{ daily.title }}</div>
+        <li v-for="(daily, idx) in reversedDailys" :key="idx">
+          <div @click="handleItemClick(daily)"> {{ daily.title}} <span style="font-size:10px; color:#777;">{{ daily.date }}</span></div>
           <div class="userBtn">
             <p v-show="isShow" @click="editItem(daily)"><img src="@/assets/edit.png" alt=""></p>
             <p v-show="isShow" @click="deleteItem(daily.id)"><img src="@/assets/delete.png" alt=""></p>
@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from "vue-router";
 
 const dailys = ref<any[]>([])
@@ -38,6 +38,16 @@ const isShow = ref<boolean>(false);
 const router = useRouter();
 const editingItemId = ref<string>('')
 const isEditMode = ref<boolean>(false)
+
+
+
+const textareaRows = computed(() => {
+  return window.innerWidth < 768 ? 5 : 10; // 768은 모바일 화면 너비에 따라 조정 가능
+});
+
+const reversedDailys = computed(() => {
+  return dailys.value.slice().reverse();
+});
 
 
 onMounted(() => {
@@ -89,13 +99,21 @@ const saveText = () => {
     return
   }
 
+  const index = savedTexts.findIndex((item:any) => item.id === editingItemId.value);
+  const currentDate = new Date(); // 현재 시간을 얻기 위해 Date 객체 생성
+  const year = currentDate.getFullYear(); // 연도를 가져옴
+  const month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // 월을 가져옴 (0부터 시작하므로 +1 필요, 두 자리로 만듦)
+  const day = ('0' + currentDate.getDate()).slice(-2); // 일을 가져옴 (두 자리로 만듦)
+  const hours = ('0' + currentDate.getHours()).slice(-2); // 시간을 가져옴 (두 자리로 만듦)
+
+  const currentTimeFormatted = `${year}.${month}.${day}.${hours}`; // yyyy.mm.dd.hh 형식으로 변환
   if (editingItemId.value) {
     // 수정 중인 아이템의 인덱스 찾기
-    const index = savedTexts.findIndex((item:any) => item.id === editingItemId.value);
     if (index !== -1) {
       // 해당 아이템의 내용을 수정
       savedTexts[index].title = title.value;
       savedTexts[index].text = text.value;
+      savedTexts[index].date = currentTimeFormatted
       localStorage.setItem('savedTexts', JSON.stringify(savedTexts));
       console.log(`Item with ID ${editingItemId.value} updated`);
     } else {
@@ -103,7 +121,7 @@ const saveText = () => {
     }
   } else {
     const id = generateId(); // 고유한 id 생성
-    savedTexts.push({ id: id, title: title.value, text: text.value }); // 새로운 텍스트 추가
+    savedTexts.push({ id: id, title: title.value, text: text.value, date: currentTimeFormatted }); // 새로운 텍스트 추가
     localStorage.setItem('savedTexts', JSON.stringify(savedTexts)); // 배열을 다시 local storage에 저장
     console.log(`New item added with ID ${id}`);
   }
@@ -192,14 +210,14 @@ const exportToExcel = () => {
 <style lang="less" scoped>
 .daily {
   color: #efefef;
-  margin:20vh auto 0;
+  margin:0 auto;
   max-width: 1903px;
   width: 90%;
   .title {
     height: 100px;
     line-height: 100px;
     text-align: center;
-    padding-top: 50px;
+    padding-top: 0px;
   }
   input[type="text"] {
     background-color:#2f2f2f;
@@ -248,7 +266,7 @@ const exportToExcel = () => {
     overflow:auto;
     max-width: 600px;
     width: 100%;
-    height:30vh;
+    height:40vh;
     margin: 0 auto;
     scrollbar-width: thin; /* Firefox */
     &::-webkit-scrollbar {
@@ -265,7 +283,7 @@ const exportToExcel = () => {
         text-align: left;
         position: relative;
         list-style-type: none;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
       &> .userBtn {
         display: flex;
         position: absolute;
@@ -286,7 +304,7 @@ const exportToExcel = () => {
   }
 }
 
-@media screen and (min-width : 300px) and (max-width : 760px) {
+@media screen and (min-width : 300px) and (max-width : 768px) {
   .daily {
   margin:0 auto;
   max-width: 100%;
@@ -338,7 +356,7 @@ const exportToExcel = () => {
     overflow:auto;
     max-width: 90%;
     width: 100%;
-    height:30vh;
+    height:40vh;
     margin: 0 auto;
     scrollbar-width: thin; /* Firefox */
     &::-webkit-scrollbar {
@@ -354,7 +372,7 @@ const exportToExcel = () => {
         text-align: left;
         position: relative;
         list-style-type: none;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
       &>div {
         
       }
