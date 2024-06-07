@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, onUnmounted } from 'vue'
 import { useRouter } from "vue-router";
 
 const dailys = ref<any[]>([])
@@ -38,14 +38,24 @@ const isShow = ref<boolean>(false);
 const router = useRouter();
 const editingItemId = ref<string>('')
 const isEditMode = ref<boolean>(false)
+let autoSaveInterval: number | null = null; // 변수 선언
 
 //자동 저장 함수
 const startAutoSave = () => {
   // isEditMode가 true이고 1분마다 saveText 함수를 호출하여 자동 저장
   if (isEditMode.value) {
+    if (autoSaveInterval) {
+      clearInterval(autoSaveInterval); // 기존 간격 제거
+    }
     autoSaveInterval = setInterval(saveTextAutomatically, 60000); // 1분마다 호출 (60 * 1000 milliseconds)
   }
 }
+
+onUnmounted(() => {
+  if (autoSaveInterval) {
+    clearInterval(autoSaveInterval); // 컴포넌트 언마운트 시 간격 제거
+  }
+});
 
 const saveTextAutomatically = () => {
   // title과 text의 값이 존재하는지 확인
