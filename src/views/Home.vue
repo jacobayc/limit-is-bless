@@ -47,7 +47,7 @@ const startAutoSave = () => {
     if (autoSaveInterval) {
       clearInterval(autoSaveInterval); // 기존 간격 제거
     }
-    autoSaveInterval = setInterval(saveTextAutomatically, 60000); // 1분마다 호출 (60 * 1000 milliseconds)
+    autoSaveInterval = setInterval(saveTextAutomatically, 180000); // 3분마다 호출 (60 * 1000 milliseconds)
   }
 }
 
