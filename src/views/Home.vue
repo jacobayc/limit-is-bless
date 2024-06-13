@@ -31,7 +31,20 @@
 import { ref, onMounted, computed, onUnmounted } from 'vue'
 import { useRouter } from "vue-router";
 
-const dailys = ref<any[]>([])
+interface SavedText {
+  title: string;
+  text: string;
+  id: string | number;
+}
+
+interface Daily {
+  title: string;
+  text: string;
+  id: string;
+  date: string;
+}
+
+const dailys = ref<Daily[]>([])
 const title = ref<string>('')
 const text = ref<string>('')
 const isShow = ref<boolean>(false);
@@ -39,6 +52,7 @@ const router = useRouter();
 const editingItemId = ref<string>('')
 const isEditMode = ref<boolean>(false)
 let autoSaveInterval: number | null = null; // 변수 선언
+
 
 //자동 저장 함수
 const startAutoSave = () => {
@@ -69,7 +83,7 @@ const saveTextAutomatically = () => {
     return
   }
 
-  const index = savedTexts.findIndex((item:any) => item.id === editingItemId.value);
+  const index = savedTexts.findIndex((item:SavedText) => item.id === editingItemId.value);
   const currentDate = new Date(); // 현재 시간을 얻기 위해 Date 객체 생성
   const year = currentDate.getFullYear(); // 연도를 가져옴
   const month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // 월을 가져옴 (0부터 시작하므로 +1 필요, 두 자리로 만듦)
@@ -123,7 +137,8 @@ onMounted(() => {
   getList()
 })
 
-const editItem = (daily:any) => {
+
+const editItem = (daily: Daily) => {
   // 해당 항목의 내용을 수정할 수 있도록 title과 text에 저장
   title.value = daily.title;
   text.value = daily.text;
@@ -137,16 +152,18 @@ const editItem = (daily:any) => {
 }
 
 
-const onTextAreaInput = (event:any) => {
-  let newText = (event.target as HTMLTextAreaElement).value;
+const onTextAreaInput = (event: Event) => {
+  let newText = (event.target as HTMLTextAreaElement).value; 
+  if(event instanceof KeyboardEvent) {
       // 엔터 키를 눌렀을 때 '\n' 처리
-      if (event.key  === 'Enter') {
-        newText += '\n';
-      }
-      text.value = newText;
+    if (event.key  === 'Enter') {
+      newText += '\n';
+    }
+  }
+  text.value = newText;
 }
 
-const handleItemClick = (v:any) => {
+const handleItemClick = (v: Daily) => {
   const uniqId = v.id
   router.push(`/list?id=${uniqId}`);
 };
@@ -169,7 +186,7 @@ const saveText = () => {
     return
   }
 
-  const index = savedTexts.findIndex((item:any) => item.id === editingItemId.value);
+  const index = savedTexts.findIndex((item:SavedText) => item.id === editingItemId.value);
   const currentDate = new Date(); // 현재 시간을 얻기 위해 Date 객체 생성
   const year = currentDate.getFullYear(); // 연도를 가져옴
   const month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // 월을 가져옴 (0부터 시작하므로 +1 필요, 두 자리로 만듦)
@@ -214,13 +231,13 @@ const saveText = () => {
   isEditMode.value= false
 }
 
-const deleteItem = (id:any) => {
+const deleteItem = (id:string) => {
   // 로컬 스토리지에서 저장된 데이터 가져오기
   const savedTextsStr = localStorage.getItem('savedTexts');
   let savedTexts = savedTextsStr ? JSON.parse(savedTextsStr) : [];
 
   // 해당 아이템의 인덱스 찾기
-  const index = savedTexts.findIndex((item:any) => item.id === id);
+  const index = savedTexts.findIndex((item:SavedText) => item.id === id);
 
   if (index !== -1) {
     alert('삭제 완료.')
@@ -259,7 +276,7 @@ const exportToExcel = () => {
   csvContent += "Title,Text\n";
 
   // 데이터 배열을 순회하며 각 요소를 CSV 형식으로 변환
-  savedTexts.forEach((item:any) => {
+  savedTexts.forEach((item:SavedText) => {
     const row = `${item.title},${item.text.replace(/(?:\r\n|\r|\n)/g, ' ')}\n`;
     csvContent += row;
   });
