@@ -10,18 +10,25 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from "vue-router";
 
+interface Daily {
+  title: string;
+  text: string;
+  id: string;
+  date: string;
+}
+
 onMounted(() => {
   // 로컬 스토리지에서 저장된 텍스트 배열을 가져옴
   getList()
 })
 
 const router = useRouter();
-const dailys = ref<any[]>([])
+const dailys = ref<Daily[]>([])
 
 const getList = () => {
   const query = router.currentRoute.value.query;
   const savedTexts = JSON.parse(localStorage.getItem('savedTexts') || '[]');
-  const filteredText = savedTexts.filter((v: any) => v.id == query.id)
+  const filteredText = savedTexts.filter((v: Daily) => v.id == query.id)
   
   // 가져온 텍스트 배열을 dailys 배열에 할당
   dailys.value = filteredText;
