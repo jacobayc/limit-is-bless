@@ -410,7 +410,7 @@ const exportToExcel = () => {
   }
   textarea {
     // letter-spacing: -3px; /* 글자 간격을 줄임 */
-    word-spacing: -7px; /* 단어 간격을 줄임 */
+    // word-spacing: -7px; /* 단어 간격을 줄임 */
     font-size:12px;
     max-width: 80%;
     width: 100%;
