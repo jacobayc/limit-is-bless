@@ -8,6 +8,5 @@
 	"theme_color": "#7c61ff",
 	"dir": "ltr",
 	"display": "standalone",
-	"orientation": "any",
 	"categories": ["lifestyle", "productivity", "social"] 
 }
