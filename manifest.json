@@ -8,5 +8,17 @@
 	"theme_color": "#7c61ff",
 	"dir": "ltr",
 	"display": "standalone",
-	"categories": ["lifestyle", "productivity", "social"] 
+	"categories": ["lifestyle", "productivity", "social"],
+	"icons": [
+    {
+      "src": "assets/icon-512x512.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
