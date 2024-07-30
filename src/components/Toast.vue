@@ -1,6 +1,6 @@
 <template>
   <div class="toast">
-    {{ message }}
+    {{ props.message }}
   </div>
 </template>
 
@@ -8,7 +8,7 @@
 import { defineProps } from 'vue';
 
 const props = defineProps<{
-  message: string;
+  message: string | null;
 }>();
 
 </script>
