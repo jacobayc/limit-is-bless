@@ -91,7 +91,8 @@ const saveTextAutomatically = () => {
   isShow.value = false
   let savedTexts = JSON.parse(localStorage.getItem('savedTexts') || '[]'); // 저장된 텍스트 배열 가져오기
   if(text.value.length < 2 || title.value.length < 1) {
-    alert("내용을 입력해주세요")
+    // alert("내용을 입력해주세요")
+    showToast("내용을 입력해주세요")
     dailys.value = savedTexts;
     return
   }
