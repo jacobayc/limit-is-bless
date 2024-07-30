@@ -61,7 +61,7 @@ const startAutoSave = () => {
     if (autoSaveInterval) {
       clearInterval(autoSaveInterval); // 기존 간격 제거
     }
-    autoSaveInterval = setInterval(saveTextAutomatically, 180000); // 3분마다 호출 (60 * 1000 milliseconds)
+    autoSaveInterval = setInterval(saveTextAutomatically, 300000); // 5분마다 호출 (60 * 1000 milliseconds)
   }
 }
 
@@ -124,7 +124,7 @@ const saveTextAutomatically = () => {
 
 
 const textareaRows = computed(() => {
-  return window.innerWidth < 768 ? 5 : 10; // 768은 모바일 화면 너비에 따라 조정 가능
+  return window.innerWidth < 768 ? 10 : 15; // 768은 모바일 화면 너비에 따라 조정 가능
 });
 
 const reversedDailys = computed(() => {
