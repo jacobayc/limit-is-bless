@@ -45,8 +45,9 @@ const getList = () => {
     padding-top:40px;
   }
   &>div {
-    height: 90vh;
+    height: 80vh;
     padding: 40px 60px;
+    overflow: auto;
     text-align: left;
     word-wrap: break-word;
     white-space: pre-wrap;
