@@ -162,7 +162,7 @@ const editItem = (daily: Daily) => {
   isShow.value = false;
   isEditMode.value = true;
   // alert("수정 후 저장버튼을 눌러야 작업이 완료됩니다.")
-  showToast("수정 후 저장버튼을 눌러야 작업이 완료됩니다.")
+  showToast("수정후 저장 버튼을 눌러주세요.")
   // 자동 저장 함수 호출
   startAutoSave();
 }
