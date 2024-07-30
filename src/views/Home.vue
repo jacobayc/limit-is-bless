@@ -160,7 +160,8 @@ const editItem = (daily: Daily) => {
   editingItemId.value = daily.id;
   isShow.value = false;
   isEditMode.value = true;
-  alert("수정 후 저장버튼을 눌러야 작업이 완료됩니다.")
+  // alert("수정 후 저장버튼을 눌러야 작업이 완료됩니다.")
+  showToast("수정 후 저장버튼을 눌러야 작업이 완료됩니다.")
   // 자동 저장 함수 호출
   startAutoSave();
 }
@@ -241,7 +242,8 @@ const saveText = () => {
   // dailys.value = savedTexts;
   // title.value = "";
   // text.value = ""
-  alert("저장 완료")
+  // alert("저장 완료")
+  showToast("저장 완료")
   isEditMode.value= false
 }
 
@@ -254,7 +256,8 @@ const deleteItem = (id:string) => {
   const index = savedTexts.findIndex((item:SavedText) => item.id === id);
 
   if (index !== -1) {
-    alert('삭제 완료.')
+    // alert('삭제 완료.')
+    showToast("삭제 완료")
     // 아이템 삭제
     savedTexts.splice(index, 1);
     // 수정된 데이터 다시 로컬 스토리지에 저장
@@ -280,7 +283,8 @@ const exportToExcel = () => {
 
   // 데이터가 존재하는지 확인
   if (savedTexts.length === 0) {
-    alert('내보낼 데이터가 없습니다.');
+    // alert('내보낼 데이터가 없습니다.');
+    showToast("내보낼 데이터가 없습니다.")
     return;
   }
 
