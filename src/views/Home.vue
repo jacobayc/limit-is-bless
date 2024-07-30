@@ -25,11 +25,13 @@
       </ul>
     </div>
   </div>
+  <Toast v-if="isToastMessage" :message="toastMessage" />
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed, onUnmounted } from 'vue'
 import { useRouter } from "vue-router";
+import Toast from '../components/Toast.vue'; // Toast 컴포넌트 import
 
 interface SavedText {
   title: string;
@@ -52,6 +54,8 @@ const router = useRouter();
 const editingItemId = ref<string>('')
 const isEditMode = ref<boolean>(false)
 let autoSaveInterval: number | null = null; // 변수 선언
+const toastMessage = ref<string | null>(null);
+const isToastMessage = ref<boolean>(false);
 
 
 //자동 저장 함수
@@ -64,6 +68,15 @@ const startAutoSave = () => {
     autoSaveInterval = setInterval(saveTextAutomatically, 300000); // 5분마다 호출 (60 * 1000 milliseconds)
   }
 }
+// 토스트 메시지 노출
+const showToast = (message: string) => {
+  isToastMessage.value = true
+  toastMessage.value = message;
+  setTimeout(() => {
+    isToastMessage.value = false
+    toastMessage.value = null;
+  }, 2000);
+};
 
 onUnmounted(() => {
   if (autoSaveInterval) {
@@ -117,7 +130,8 @@ const saveTextAutomatically = () => {
     // dailys.value = savedTexts;
     // title.value = "";
     // text.value = ""
-  alert("임시저장 완료")
+  // alert("임시저장 완료")
+  showToast("임시저장 완료")
   // isEditMode.value= false
   }
 }
