@@ -9,13 +9,16 @@
     <input :style="{ outline: isEditMode ? '1px dashed lime' : 'none' }" type="text" v-model="title" placeholder="Title" />
     <textarea :style="{ outline: isEditMode ? '1px dashed lime' : 'none' }" v-model="text" @input="onTextAreaInput" name="" id="" cols="20" :rows="textareaRows"></textarea>
     <div class="buttonArea">
+    <div class="searchArea" v-if="isShow">
+      <input type="text" v-model="searchQuery" placeholder="Search..." />
+    </div>
      <p style="margin-right:5px;" @click="isShow = !isShow"><img src="@/assets/setting.png" alt=""></p> 
      <p @click="saveText"><img src="@/assets/save.png" alt=""></p> 
      <p v-show="isShow" style ="position: absolute; left:0; top: 0;" @click="exportToExcel"><img src="@/assets/export.png" alt=""></p> 
-    </div>
+   </div>
     <div class="list">
       <ul>
-        <li v-for="(daily, idx) in reversedDailys" :key="idx">
+        <li v-for="(daily, idx) in filteredDailys" :key="idx">
           <div @click="handleItemClick(daily)"> {{ daily.title}} <span style="font-size:10px; color:#777;">{{ daily.date }}</span></div>
           <div class="userBtn">
             <p v-show="isShow" @click="editItem(daily)"><img src="@/assets/edit.png" alt=""></p>
@@ -56,6 +59,7 @@ const isEditMode = ref<boolean>(false)
 let autoSaveInterval: number | null = null; // 변수 선언
 const toastMessage = ref<string | null>(null);
 const isToastMessage = ref<boolean>(false);
+const searchQuery = ref<string>('');  // 검색어
 
 
 //자동 저장 함수
@@ -144,6 +148,16 @@ const textareaRows = computed(() => {
 
 const reversedDailys = computed(() => {
   return dailys.value.slice().reverse();
+});
+
+// 검색 필터링된 dailys
+const filteredDailys = computed(() => {
+  if (searchQuery.value) {
+    return reversedDailys.value.filter(daily => 
+      daily.title.includes(searchQuery.value) || daily.text.includes(searchQuery.value)
+    );
+  }
+  return reversedDailys.value;
 });
 
 
@@ -250,6 +264,11 @@ const saveText = () => {
 }
 
 const deleteItem = (id:string) => {
+  // 삭제 확인 절차
+  const confirmed = window.confirm("정말 삭제하시겠습니까?")
+
+  if(confirmed) {
+  // 삭제 절차 시작
   // 로컬 스토리지에서 저장된 데이터 가져오기
   const savedTextsStr = localStorage.getItem('savedTexts');
   let savedTexts = savedTextsStr ? JSON.parse(savedTextsStr) : [];
@@ -259,7 +278,6 @@ const deleteItem = (id:string) => {
 
   if (index !== -1) {
     // alert('삭제 완료.')
-    showToast("삭제 완료")
     // 아이템 삭제
     savedTexts.splice(index, 1);
     // 수정된 데이터 다시 로컬 스토리지에 저장
@@ -267,11 +285,15 @@ const deleteItem = (id:string) => {
     // 화면에서도 해당 아이템 삭제
     dailys.value.splice(index, 1);
     // isShow.value = false
+    showToast("삭제 완료")
     console.log(`Item with ID ${id} deleted`);
   } else {
     console.log(`Item with ID ${id} not found`);
   }
   isShow.value = false;
+  } else {
+    showToast("삭제가 취소되었습니다.")
+  }
 }
 
 const generateId = () => {
@@ -368,6 +390,12 @@ const exportToExcel = () => {
     margin: 10px auto; 
     display: flex; 
     justify-content: flex-end;
+    .searchArea {
+      position: absolute;
+      top: 10px;
+      left: 100px;
+      width: 60%;
+    }
   }
   .list {
     overflow:auto;
@@ -458,6 +486,12 @@ const exportToExcel = () => {
     margin: 10px auto; 
     display: flex; 
     justify-content: flex-end;
+    .searchArea {
+      position: absolute;
+      top: 8px;
+      left: 40px;
+      width: 60%;
+    }
   }
   .list {
     overflow:auto;
