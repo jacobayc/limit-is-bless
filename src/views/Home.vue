@@ -37,6 +37,7 @@ import { useRouter } from "vue-router";
 import Toast from '../components/Toast.vue'; // Toast 컴포넌트 import
 
 interface SavedText {
+  date: string;
   title: string;
   text: string;
   id: string | number;
@@ -312,26 +313,36 @@ const exportToExcel = () => {
     return;
   }
 
-  // Excel 파일로 변환할 데이터
-  let csvContent = "data:text/csv;charset=utf-8,";
-  // 헤더 추가 (제목과 내용)
-  csvContent += "Title,Text\n";
+  // UTF-8 BOM 추가
+  let csvContent = "\uFEFF"; // BOM 추가
+  csvContent += "date,id,Title,Text\n"; // 헤더 추가
+
+  // // Excel 파일로 변환할 데이터
+  // let csvContent = "data:text/csv;charset=utf-8,";
+  // // 헤더 추가 (제목과 내용)
+  // csvContent += "Title,Text\n";
 
   // 데이터 배열을 순회하며 각 요소를 CSV 형식으로 변환
   savedTexts.forEach((item:SavedText) => {
-    const row = `${item.title},${item.text.replace(/(?:\r\n|\r|\n)/g, ' ')}\n`;
+    const row = `${item.date},${item.id},${item.title},${item.text.replace(/(?:\r\n|\r|\n)/g, ' ')}\n`;
     csvContent += row;
   });
 
   // CSV 형식의 데이터를 Blob 객체로 생성
-  const encodedUri = encodeURI(csvContent);
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement("a");
-  link.setAttribute("href", encodedUri);
+  const url = URL.createObjectURL(blob);
+  
+  // 링크 속성 설정
+  link.setAttribute("href", url);
   link.setAttribute("download", "exported_data.csv");
   document.body.appendChild(link);
 
   // 다운로드 링크 클릭
   link.click();
+
+  // 다운로드 완료 후 링크 제거
+  document.body.removeChild(link);
 }
 
 </script>
