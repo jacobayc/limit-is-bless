@@ -2,12 +2,12 @@
 <template>
   <div class="daily">
     <!-- <h1>{{ msg }}</h1> -->
-    <div class="title"> Élan vital </div>
+    <div class="title" @click="toggleTextArea"> Élan vital </div>
     <div v-if="isEditMode" style="width: 85%; font-size:12px; margin:0 auto; text-align: left;">
       <p style="width: 75px; text-align: center; background:purple; border-radius: 8px;">Edit Mode</p>
     </div>
     <input :style="{ outline: isEditMode ? '1px dashed lime' : 'none' }" type="text" v-model="title" placeholder="Title" />
-    <textarea :style="{ outline: isEditMode ? '1px dashed lime' : 'none' }" v-model="text" @input="onTextAreaInput" name="" id="" cols="20" :rows="textareaRows"></textarea>
+    <textarea :style="{ outline: isEditMode ? '1px dashed lime' : 'none' }" v-model="text" @input="onTextAreaInput" name="" id="" cols="20" :rows="textareaRows" ref="textareaElement"></textarea>
     <div class="buttonArea">
     <div class="searchArea" v-if="isShow">
       <input type="text" v-model="searchQuery" placeholder="Search..." />
@@ -16,7 +16,7 @@
      <p @click="saveText"><img src="@/assets/save.png" alt=""></p> 
      <p v-show="isShow" style ="position: absolute; left:0; top: 0;" @click="exportToExcel"><img src="@/assets/export.png" alt=""></p> 
    </div>
-    <div class="list">
+    <div class="list" v-if="!isListHidden">
       <ul>
         <li v-for="(daily, idx) in filteredDailys" :key="idx">
           <div @click="handleItemClick(daily)"> {{ daily.title}} <span style="font-size:10px; color:#777;">{{ daily.date }}</span></div>
@@ -62,6 +62,22 @@ const toastMessage = ref<string | null>(null);
 const isToastMessage = ref<boolean>(false);
 const searchQuery = ref<string>('');  // 검색어
 
+//리스트 가리가
+const textareaElement = ref<HTMLTextAreaElement | null>(null); // textareaElement를 ref로 초기화
+const isListHidden = ref<boolean>(false); // 리스트 가리기 상태
+
+const toggleTextArea = () => {
+  // textarea의 row 값을 토글하는 함수
+  if (textareaElement.value) { // textareaElement가 null이 아닐 때만 접근
+    if (isListHidden.value) {
+      textareaElement.value.rows = 15; // 원래대로
+      isListHidden.value = false; // 리스트 표시
+    } else {
+      textareaElement.value.rows = 35; // 35으로 변경
+      isListHidden.value = true; // 리스트 숨김
+    }
+  }
+};
 
 //자동 저장 함수
 const startAutoSave = () => {
@@ -299,7 +315,7 @@ const deleteItem = (id:string) => {
 
 const generateId = () => {
   // 현재 시간을 이용하여 고유한 id 생성
-  return new Date().getTime().toString(36);
+  return new Date().getTime().toString(36) + Math.random().toString(36).substr(2);
 }
 
 const exportToExcel = () => {
