@@ -2,7 +2,7 @@
 <template>
   <div class="daily">
     <!-- <h1>{{ msg }}</h1> -->
-    <div class="title" @click="toggleTextArea"> Élan vital </div>
+    <div class="title"> Élan vital </div>
     <div v-if="isEditMode" style="width: 85%; font-size:12px; margin:0 auto; text-align: left;">
       <p style="width: 75px; text-align: center; background:purple; border-radius: 8px;">Edit Mode</p>
     </div>
@@ -15,6 +15,7 @@
      <p style="margin-right:5px;" @click="isShow = !isShow"><img src="@/assets/setting.png" alt=""></p> 
      <p @click="saveText"><img src="@/assets/save.png" alt=""></p> 
      <p v-show="isShow" style ="position: absolute; left:0; top: 0;" @click="exportToExcel"><img src="@/assets/export.png" alt=""></p> 
+     <p @click="toggleTextArea" style="position:absolute; top: 40px;"> ↕ </p> 
    </div>
     <div class="list" v-if="!isListHidden">
       <ul>
