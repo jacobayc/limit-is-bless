@@ -320,47 +320,33 @@ const generateId = () => {
 }
 
 const exportToExcel = () => {
-  // 저장된 데이터 가져오기
-  const savedTexts = JSON.parse(localStorage.getItem('savedTexts') || '[]');
+    const savedTexts = JSON.parse(localStorage.getItem('savedTexts') || '[]');
+    if (savedTexts.length === 0) {
+        showToast("내보낼 데이터가 없습니다.");
+        return;
+    }
 
-  // 데이터가 존재하는지 확인
-  if (savedTexts.length === 0) {
-    // alert('내보낼 데이터가 없습니다.');
-    showToast("내보낼 데이터가 없습니다.")
-    return;
-  }
+    // UTF-8 BOM 추가
+    let csvContent = "\uFEFF";
+    csvContent += "date,id,Title,Text\n";
 
-  // UTF-8 BOM 추가
-  let csvContent = "\uFEFF"; // BOM 추가
-  csvContent += "date,id,Title,Text\n"; // 헤더 추가
+    savedTexts.forEach((item:any) => {
+        // 텍스트 내 줄바꿈과 특수 문자 처리
+        const sanitizedText = item.text.replace(/(?:\r\n|\r|\n)/g, ' ').replace(/"/g, '""');
+        const row = `"${item.date}","${item.id}","${item.title}","${sanitizedText}"\n`;
+        csvContent += row;
+    });
 
-  // // Excel 파일로 변환할 데이터
-  // let csvContent = "data:text/csv;charset=utf-8,";
-  // // 헤더 추가 (제목과 내용)
-  // csvContent += "Title,Text\n";
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", "exported_data.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+};
 
-  // 데이터 배열을 순회하며 각 요소를 CSV 형식으로 변환
-  savedTexts.forEach((item:SavedText) => {
-    const row = `${item.date},${item.id},${item.title},${item.text.replace(/(?:\r\n|\r|\n)/g, ' ')}\n`;
-    csvContent += row;
-  });
-
-  // CSV 형식의 데이터를 Blob 객체로 생성
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement("a");
-  const url = URL.createObjectURL(blob);
-  
-  // 링크 속성 설정
-  link.setAttribute("href", url);
-  link.setAttribute("download", "exported_data.csv");
-  document.body.appendChild(link);
-
-  // 다운로드 링크 클릭
-  link.click();
-
-  // 다운로드 완료 후 링크 제거
-  document.body.removeChild(link);
-}
 
 </script>
 
