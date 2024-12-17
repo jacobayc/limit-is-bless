@@ -17,7 +17,7 @@
      <p v-show="isShow" style ="position: absolute; left:0; top: 0;" @click="exportToExcel"><img src="@/assets/export.png" alt=""></p> 
      <p @click="toggleTextArea" style="position:absolute; top: 40px;"> ↕ </p> 
    </div>
-    <div class="list" v-if="!isListHidden">
+    <div class="list" v-if="!isListHidden" ref="listRef">
       <ul>
         <li v-for="(daily, idx) in filteredDailys" :key="idx">
           <div @click="handleItemClick(daily)"> {{ daily.title}} <span style="font-size:10px; color:#777;">{{ daily.date }}</span></div>
@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, onUnmounted } from 'vue'
+import { ref, onMounted, computed, onUnmounted, nextTick  } from 'vue'
 import { useRouter } from "vue-router";
 import Toast from '../components/Toast.vue'; // Toast 컴포넌트 import
 
@@ -62,6 +62,8 @@ let autoSaveInterval: number | null = null; // 변수 선언
 const toastMessage = ref<string | null>(null);
 const isToastMessage = ref<boolean>(false);
 const searchQuery = ref<string>('');  // 검색어
+const listRef = ref<HTMLDivElement | null>(null); // .list 요소 참조
+const scrollPosition = ref<number>(0); // 스크롤 위치 저장
 
 //리스트 가리가
 const textareaElement = ref<HTMLTextAreaElement | null>(null); // textareaElement를 ref로 초기화
@@ -179,9 +181,16 @@ const filteredDailys = computed(() => {
 });
 
 
-onMounted(() => {
+onMounted(async () => {
   // 로컬 스토리지에서 저장된 텍스트 배열을 가져옴
   getList()
+
+  // list scroll
+  await nextTick();
+  const savedPosition = localStorage.getItem('listScrollPosition');
+  if (listRef.value) {
+    listRef.value.scrollTop = savedPosition ? parseInt(savedPosition, 10) : 0; // 저장된 위치로 이동하거나 기본값(0)으로 설정
+  }
 })
 
 
@@ -212,6 +221,10 @@ const onTextAreaInput = (event: Event) => {
 }
 
 const handleItemClick = (v: Daily) => {
+  if (listRef.value) {
+    scrollPosition.value = listRef.value.scrollTop; // 현재 스크롤 위치 저장
+    localStorage.setItem('listScrollPosition', scrollPosition.value.toString());
+  }
   const uniqId = v.id
   router.push(`/list?id=${uniqId}`);
 };
